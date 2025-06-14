@@ -43,28 +43,7 @@ const getUserById = async (req, res) => {
     }
 }
 
-// @desc Delete user (only admin)
-// @route DELETE /api/users/:id
-// @access Private/Admin
-const deleteUser = async (req, res) => {
-    try {
-        const user = await User.findById(req.params.id);
-        if (!user) {
-            return res.status(404).json({ message: "User not found" });
-        }
-
-        // Delete associated tasks
-        await Task.deleteMany({ user: user._id });
-
-        await user.remove();
-        res.json({ message: "User removed successfully" });
-    } catch (error) {
-        res.status(500).json({ message: "Server error", error: error.message });
-    }
-}
-
 module.exports = {
     getUsers,
     getUserById,
-    deleteUser
 };
