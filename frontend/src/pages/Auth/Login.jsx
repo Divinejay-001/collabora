@@ -19,7 +19,7 @@ const Login = () => {
   return (
     <AuthLayout>
       <div className="lg:w-[70%] h-3/4 md:h-full flex flex-col justify-center">
-       <h3 className='text-2xl md:text-3xl font-bold text-black'>Welcome Back <span className='inline-block animate-wave origin-bottom'>👋</span></h3>
+       <h3 className='text-shadow-glow text-2xl md:text-3xl font-bold text-black'>Welcome Back <span className='inline-block animate-wave origin-bottom'>👋</span></h3>
 <p className='text-sm md:text-base text-slate-600 mt-2 mb-6'>
   Please enter your credentials to access your account.
 </p>
