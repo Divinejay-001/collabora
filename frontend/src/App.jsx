@@ -1,7 +1,10 @@
 import React from 'react'
 
 import './App.css'
-import { Route, Router, Routes } from 'react-router-dom'
+import "@fontsource/outfit";         // Regular (400)
+import "@fontsource/outfit/600.css"; // Semi-bold
+import "@fontsource/outfit/700.css"; // Bold
+import { Route, BrowserRouter, Routes, Navigate } from 'react-router-dom'
 import Login from './pages/Auth/Login'
 import Signup from './pages/Auth/Signup'
 import PrivateRoutes from './routes/PrivateRoutes'
@@ -18,28 +21,35 @@ function App() {
 
   return (
     <div>
-      <Router>
-        <Routes>
-          <Route path='/login' element={<Login/>}/>
-          <Route path='/signUp' element={<Signup/>}/>
+     <BrowserRouter>
+  <Routes>
+    {/* Redirect / to /login */}
+    <Route path="/" element={<Navigate to="/login" />} />
 
-          {/* Admin routes  */}
-<Route element={<PrivateRoutes allowedRoles={['admin']}/>} >
-          <Route path='/admin/dashboard' element={<Dashboard/>}/>
-          <Route path='/admin/tasks' element={<ManageTasks/>}/>
-          <Route path='/admin/create-task' element={<CreateTask/>}/>
-          <Route path='/admin/users' element={<ManageUsers/>}/>
-</Route>
-         
-          {/* User routes  */}
-<Route element={<PrivateRoutes allowedRoles={['user']}/>} >
-          <Route path='/user/dashboard' element={<UDashboard/>}/>
-          <Route path='/user/tasks' element={<MyTasks/>}/>
-          <Route path='/user/tasks-details/:id' element={<ViewTaskDetails/>}/>
-</Route>
+    {/* Auth */}
+    <Route path="/login" element={<Login />} />
+    <Route path="/signUp" element={<Signup />} />
 
-        </Routes>
-      </Router>
+    {/* Admin routes */}
+    <Route element={<PrivateRoutes allowedRoles={['admin']} />}>
+      <Route path="/admin/dashboard" element={<Dashboard />} />
+      <Route path="/admin/tasks" element={<ManageTasks />} />
+      <Route path="/admin/create-task" element={<CreateTask />} />
+      <Route path="/admin/users" element={<ManageUsers />} />
+    </Route>
+
+    {/* User routes */}
+    <Route element={<PrivateRoutes allowedRoles={['user']} />}>
+      <Route path="/user/dashboard" element={<UDashboard />} />
+      <Route path="/user/tasks" element={<MyTasks />} />
+      <Route path="/user/tasks-details/:id" element={<ViewTaskDetails />} />
+    </Route>
+
+    {/* Optional 404 */}
+    <Route path="*" element={<div>404 Not Found</div>} />
+  </Routes>
+</BrowserRouter>
+
       
     </div>
   )
