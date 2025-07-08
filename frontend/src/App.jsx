@@ -1,10 +1,10 @@
-import React from 'react'
+import React, { useContext } from 'react'
 
 import './App.css'
 import "@fontsource/outfit";         // Regular (400)
 import "@fontsource/outfit/600.css"; // Semi-bold
 import "@fontsource/outfit/700.css"; // Bold
-import { Route, BrowserRouter, Routes, Navigate } from 'react-router-dom'
+import { Route, BrowserRouter, Routes, Navigate, Outlet } from 'react-router-dom'
 import Login from './pages/Auth/Login'
 import Signup from './pages/Auth/Signup'
 import PrivateRoutes from './routes/PrivateRoutes'
@@ -15,12 +15,14 @@ import ManageUsers from './pages/Admin/ManageUsers'
 import UDashboard from './pages/User/UDashboard'
 import MyTasks from './pages/User/MyTasks'
 import ViewTaskDetails from './pages/User/ViewTaskDetails'
+import UserProvider, { UserContext } from './context/Context';
 
 
 function App() {
 
   return (
-    <div>
+    <UserProvider>
+    <div className='select-none'>
      <BrowserRouter>
   <Routes>
     {/* Redirect / to /login */}
@@ -45,6 +47,8 @@ function App() {
       <Route path="/user/tasks-details/:id" element={<ViewTaskDetails />} />
     </Route>
 
+    {/* Default Route */}
+   <Route path='/' element={<Root/>}/>
     {/* Optional 404 */}
     <Route path="*" element={<div>404 Not Found</div>} />
   </Routes>
@@ -52,7 +56,19 @@ function App() {
 
       
     </div>
+    </UserProvider>
   )
 }
 
 export default App
+
+const Root = () => {
+  const {  user, loading } = useContext(UserContext);
+
+  if(loading) return <Outlet />
+
+  if(!user){
+    return <Navigate to="/login" />
+  }
+   return user.role === "admin" ? <Navigate to="/admin/dashboard" /> : <Navigate to="/user/dashboard" />
+}

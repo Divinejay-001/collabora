@@ -1,20 +1,66 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import AuthLayout from '../../components/layouts/AuthLayout'
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import Input from '../../components/Input/Input'
+import { validateEmail } from '../../utils/helper'
+import axiosInstance from '../../utils/axiosInstance'
+import { API_PATHS } from '../../utils/apiPaths'
+import { UserContext } from '../../context/Context'
 
 const Login = () => {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [error, setError] = useState(null)
 
-  const navigate = useNavigate()
+  const { updateUser} = useContext(UserContext)
+  const navigate = useNavigate();
 
   // Handle LOgin Form Submission
   const handleLogin = async (e) =>{
     e.preventDefault()
 
+    if (!validateEmail(email)) {
+      setError("Please enter a valid email address.")
+      return;
+    }
+
+    if (!password) {
+     setError("Please enter the paasword");
+     return;
+    }
+
+    setError("")
+
+    // Call the API to login
+    try{
+      console.log('Email:', email, 'Password:', password);
+      const response = await axiosInstance.post(API_PATHS.AUTH.LOGIN, {
+        email,
+        password,
+      })
+      
+      const { token, role } = response.data;
+
+      if(token) {
+        localStorage.setItem("token", token);
+        updateUser(response.data);
+
+        //Redirect based on role
+        if(role === "admin") {
+          navigate("/admin/dashboard")
+        } else{
+          navigate("/user/dashboard")
+        }
+      }
+    } catch(error) {
+      if(error.response && error.response.data.message){
+      setError("Login failed. Please try again.");
+
+      } else {
+        setError("Something went wrong. Please try again.")
+      }
+    }
   }
   return (
     <AuthLayout>

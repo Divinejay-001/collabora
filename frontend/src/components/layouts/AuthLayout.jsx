@@ -3,7 +3,7 @@ import React from 'react'
 const AuthLayout = ({children}) => {
   return (
     <div className='flex bg-gradient-to-tr from-primary/25 to-tertiary/5'>
-      <div className='w-screen h-screen md:w-[60vw] px-12 pt-8 pb-12'>
+      <div className='w-screen h-screen overflow-y-auto md:overflow-y-hidden md:w-[60vw] px-12 pt-8 pb-12'>
      <div className="flex items-center space-x-1">
   <div className="w-10 h-10 rounded-full bg-gradient-to-r from-indigo-500 to-violet-600 flex items-center justify-center shadow-md">
     <p className="text-white font-outfit font-bold text-xl sm:text-2xl">C</p>
