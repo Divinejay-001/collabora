@@ -20,66 +20,82 @@ const Signup = () => {
   const navigate = useNavigate();
   const [error, setError] = useState(null);
 
+// console.log(response)
+
+const uploadImage = async (file) => {
+  const formData = new FormData();
+  formData.append("image", file);
+
+  // ✅ Proper way to see what's inside FormData
+  for (let pair of formData.entries()) {
+    console.log("🧾 FormData entry:", pair[0], pair[1]);
+  }
+
+  const response = await axiosInstance.post(
+    API_PATHS.IMAGE.UPLOAD_IMAGE,
+    formData,
+    {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    }
+  );
+
+  return {
+    imageUrl: `http://localhost:5000${response.data.filePath}`,
+  };
+};
+
   // Handle Sign Up Form Submission
-    const handleSignUp = async (e) =>{
-      e.preventDefault()
-  
-      let profileImageUrl = "";
-      
-      if (!fullName) {
-        setError("Please enter a valid name.")
-        return;
-      }
-      if (!validateEmail(email)) {
-        setError("Please enter a valid email address.")
-        return;
-      }
-      if (!password) {
-       setError("Please enter the paasword");
-       return;
-      }
-  
-      setError("")
-  
-      // Call the API to signup
-       try{
+   const handleSignUp = async (e) => {
+  e.preventDefault();
 
-if (profilePic) {
-        const imgUploadRes = await uploadImage(profilePic);
-        profileImageUrl = imgUploadRes.imageUrl || "";
-      }
+  let profileImageUrl = "";
 
-      console.log('Email:', email, 'Password:', password);
-      const response = await axiosInstance.post(API_PATHS.AUTH.REGISTER, {
-        name: fullName,
-        email,
-        password,
-        profileImageUrl,
-        adminInviteToken
-      })
+  if (!fullName) return setError("Please enter a valid name.");
+  if (!validateEmail(email)) return setError("Please enter a valid email address.");
+  if (!password) return setError("Please enter the password.");
+  setError("");
 
-      const { token, role } = response.data;
+  try {
+    if (profilePic) {
+      const imgUploadRes = await uploadImage(profilePic);
+      profileImageUrl = imgUploadRes.imageUrl || "";
+    }
 
-      if(token) {
-        localStorage.setItem("token", token);
-        updateUser(response.data);
-      }
-      //Redirect based on role
-      if (role === "admin"){
+    const response = await axiosInstance.post(API_PATHS.AUTH.REGISTER, {
+      name: fullName,
+      email,
+      password,
+      profileImageUrl,
+      adminInviteToken,
+    });
+
+    const { token, role } = response.data;
+
+    if (token) {
+      // ✅ Store token immediately
+      localStorage.setItem("token", token);
+
+      // ✅ Fetch profile manually
+      const profileRes = await axiosInstance.get(API_PATHS.AUTH.GET_PROFILE);
+
+      // ✅ Update user context manually with the profile and token
+      updateUser({ ...profileRes.data, token });
+
+      // ✅ Navigate based on role
+      if (role === "admin") {
         navigate("/admin/dashboard");
       } else {
         navigate("/user/dashboard");
       }
-
-    } catch(error) {
-      if(error.response && error.response.data.message){
-      setError("Login failed. Please try again.");
-
-      } else {
-        setError("Something went wrong. Please try again.")
-      }
     }
-    }
+  } catch (error) {
+    console.error(error);
+    setError("Signup failed. Please try again.");
+  }
+};
+
   return (
     <AuthLayout>
       <div className=' lg:w-[100%] h-auto md:h-full mt-0 sm:mt-3 md:mt-0 flex flex-col justify-center '>

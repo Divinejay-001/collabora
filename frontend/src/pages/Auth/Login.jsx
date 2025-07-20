@@ -47,11 +47,13 @@ const Login = () => {
         updateUser(response.data);
 
         //Redirect based on role
-        if(role === "admin") {
-          navigate("/admin/dashboard")
-        } else{
-          navigate("/user/dashboard")
-        }
+         setTimeout(() => {
+    if (role === "admin") {
+      window.location.href = "/admin/dashboard"; // ✅ use full page reload to be 100% safe
+    } else {
+      window.location.href = "/user/dashboard";
+    }
+  }, 300);
       }
     } catch(error) {
       if(error.response && error.response.data.message){

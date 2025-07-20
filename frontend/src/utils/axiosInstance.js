@@ -16,8 +16,8 @@ axiosInstance.interceptors.request.use(
     const accessToken = localStorage.getItem("token");
 
     // Skip token for login/register
-    const isAuthRoute =
-      config.url.includes("/auth/login") || config.url.includes("/auth/register");
+   const isAuthRoute =
+  config.url?.includes("/auth/login") || config.url?.includes("/auth/register");
 
     if (accessToken && !isAuthRoute) {
       config.headers.Authorization = `Bearer ${accessToken}`;
