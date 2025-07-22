@@ -9,6 +9,7 @@ import { API_PATHS } from '../../utils/apiPaths'
 import { UserContext } from '../../context/Context'
 
 const Login = () => {
+  const [loading, setLoading] = useState(false)
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [error, setError] = useState(null)
@@ -31,6 +32,8 @@ const Login = () => {
     }
 
     setError("")
+        setLoading(true); // start loading
+
 
     // Call the API to login
     try{
@@ -62,6 +65,8 @@ const Login = () => {
       } else {
         setError("Something went wrong. Please try again.")
       }
+    } finally{
+      setLoading(false); // stop loading
     }
   }
   return (
@@ -93,11 +98,18 @@ const Login = () => {
 
           <button
   type="submit"
-  className="w-full mt-4 bg-gradient-to-r from-indigo-800 to-violet-500 hover:from-violet-600 hover:to-indigo-600
+  disabled={loading}
+  className={`w-full mt-4 bg-gradient-to-r from-indigo-800 to-violet-500 hover:from-violet-600 hover:to-indigo-600
   focus:ring-2 focus:ring-violet-500 focus:outline-none
- text-white py-2.5 rounded-xl font-medium shadow-md transition duration-300 ease-in-out"
+ text-white py-2.5 rounded-xl font-medium shadow-md transition duration-300 ease-in-out
+  ${ loading ? 'bg-blue-400 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600'}`}
 >
-  LOGIN
+  {loading ? (
+    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+  ) : (
+    "LOGIN"
+  )}
+  
 </button>
 
 

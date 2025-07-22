@@ -7,20 +7,21 @@ const DashBoardLayout = ({children, activeMenu}) => {
 
     const user = useContext(UserContext)
   return (
-    <div>
-        <Navbar activeMenu={activeMenu} />
+     <div className="min-h-screen flex flex-col">
+      <Navbar activeMenu={activeMenu} />
 
-        {
-            user && (
-            <div className='flex'>
-                <div className='max-[1080px]:hidden'>
-                    <SideMenu activeMenu={activeMenu} />
-                </div>
+      {user && (
+        <div className="flex flex-1 overflow-hidden">
+          {/* Sidebar */}
+          <div className="max-[1080px]:hidden">
+            <SideMenu activeMenu={activeMenu} />
+          </div>
 
-                <div className='grow mx-5'>
-                    {children}
-                </div>
-            </div>
+          {/* Main Content */}
+          <div className="grow mx-5 overflow-y-auto py-4">
+            {children}
+          </div>
+        </div>
             )
         }
     </div>
