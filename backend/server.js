@@ -30,6 +30,8 @@ const fileFilter = (req, file, cb) => {
     cb(new Error('Invalid file type'), false);
   }
 };
+console.log('JWT_SECRET:', process.env.JWT_SECRET);
+console.log('MONGO_URI:', process.env.MONGO_URI);
 
 const upload = multer({ storage, fileFilter });
 // =====================================

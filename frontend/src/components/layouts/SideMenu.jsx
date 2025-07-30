@@ -32,7 +32,7 @@ const SideMenu = ({ activeMenu }) => {
   if (loading || !user) return null;
 
   return (
-    <div className="w-64 h-[calc(100vh-61px)] bg-white border-gray-200/50 sticky top-[61px] z-20">
+<div className="w-64 h-[calc(100vh-61px)] bg-white border border-gray-200/50 overflow-y-auto lg:overflow-y-hidden">
       <div className="flex flex-col items-center justify-center mb-7 pt-5">
         <div className='relative'>
         <img

@@ -96,21 +96,22 @@ const Login = () => {
 
           {error && <p className='text-red-500 text-xs pb-2.5'>{error}</p>}
 
-          <button
+       <button
   type="submit"
   disabled={loading}
   className={`w-full mt-4 bg-gradient-to-r from-indigo-800 to-violet-500 hover:from-violet-600 hover:to-indigo-600
   focus:ring-2 focus:ring-violet-500 focus:outline-none
- text-white py-2.5 rounded-xl font-medium shadow-md transition duration-300 ease-in-out
-  ${ loading ? 'bg-blue-400 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600'}`}
+  text-white py-2.5 rounded-xl font-medium shadow-md transition duration-300 ease-in-out
+  flex items-center justify-center
+  ${loading ? 'bg-blue-400 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600'}`}
 >
   {loading ? (
     <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
   ) : (
     "LOGIN"
   )}
-  
 </button>
+
 
 
           <p className='text-[13px] text-slate-800 mt-3'>

@@ -140,7 +140,7 @@ colors={COLORS}
 <div>
   <div className="card">
     <div className="flex items-center justify-between">
-      <h5 className='font-medium'>Task Distribution</h5>
+      <h5 className='font-medium'>Task Priority Levels</h5>
     </div>
 <CustomBarChart
 data={barChartData}
