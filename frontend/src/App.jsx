@@ -22,7 +22,7 @@ function App() {
 
   return (
     <UserProvider>
-    <div className='select-none'>
+    <div className='select-none  '>
      <BrowserRouter>
   <Routes>
     {/* Redirect / to /login */}

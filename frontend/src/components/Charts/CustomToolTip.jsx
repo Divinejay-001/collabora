@@ -1,17 +1,21 @@
-import React from 'react'
+import React from 'react';
 
-const CustomToolTip = ({active, payload}) => {
+const CustomToolTip = ({ active, payload, label }) => {
   if (active && payload && payload.length) {
-  return (
-    <div className='bg-white shadow-md rounded-lg p-2 border border-gray-300'>
-        <p className='text-xs font-semibold text-purple-800 mb-1'>{payload[0].name}</p>
-        <p className='text-sm text-gray-600'>
-          Count: <span className='text-sm font-medium text-gray-900'>{payload[0].value}</span>
+    const item = payload[0];
+    return (
+      <div className="rounded-lg border border-gray-200 bg-white dark:bg-gray-900 dark:border-gray-700 shadow-lg p-3">
+        <p className="text-xs font-semibold text-purple-700 dark:text-purple-400 mb-1">
+          {label || item.name}
         </p>
-    </div>
-  )
-}
-return null;
-}
+        <p className="text-sm text-gray-700 dark:text-gray-200">
+          Count: <span className="font-medium text-gray-900 dark:text-white">{item.value}</span>
+        </p>
+      </div>
+    );
+  }
 
-export default CustomToolTip
+  return null;
+};
+
+export default CustomToolTip;
