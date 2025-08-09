@@ -8,6 +8,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { LuTrash2 } from 'react-icons/lu';
 import SelectDropdown from '../../components/Input/SelectDropdown';
 import SelectUsers from '../../components/Input/SelectUsers';
+import TodoListInput from '../../components/Input/TodoListInput';
 
 const CreateTask = () => {
   const location = useLocation();
@@ -20,7 +21,7 @@ const CreateTask = () => {
     priority: 'Low',
     dueDate: '',
     assignedTo: [],
-    todoChecklists: [],
+    todoCheckLists: [],
     attachments: [],
   });
 
@@ -191,12 +192,25 @@ const CreateTask = () => {
               <div className="mt-6 flex justify-end">
                 <button
                   onClick={handleSubmit}
-                  className="bg-blue-600 text-white px-5 py-2 rounded-md hover:bg-blue-700 transition"
+                  className="bg-gradient-to-r from-primary to-secondary dark:from-primary dark:to-secondary hover:bg-secondary text-white px-5 py-2 rounded-md  transition"
                   disabled={loading}
                 >
                   {loading ? 'Saving...' : taskId ? 'Update Task' : 'Create Task'}
                 </button>
               </div>
+            </div>
+
+            <div className='mt-3'>
+              <label className='text-xs font-medium text-slate-600 dark:text-slate-300'>
+                TODO CHECKLIST
+              </label>
+
+              <TodoListInput
+              todoList={taskData?.todoCheckLists}
+              setTodoList={(value) =>{
+                handleValueChange("todoCheckLists", value)
+              }}
+              />
             </div>
           </div>
         </div>

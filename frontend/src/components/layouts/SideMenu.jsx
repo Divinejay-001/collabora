@@ -33,7 +33,7 @@ const SideMenu = ({ activeMenu }) => {
   return (
     <div className="w-64 h-[calc(100vh-61px)] overflow-y-auto lg:overflow-y-hidden
       bg-white border border-gray-200/50 
-      dark:bg-gradient-to-b dark:from-[#0b0b0b] dark:to-[#1a1a1a] dark:border-gray-800">
+      dark:bg-gradient-to-b dark:from-[#0b0b0b] dark:to-[#1a1a1a] dark:border-gray-800 shadow-l">
       
       <div className="flex flex-col items-center justify-center mb-7 pt-5">
         <div className='relative'>

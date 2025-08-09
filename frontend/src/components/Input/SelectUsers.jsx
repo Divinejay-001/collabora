@@ -3,10 +3,11 @@ import axiosInstance from '../../utils/axiosInstance';
 import { API_PATHS } from '../../utils/apiPaths';
 import { LuUsers } from 'react-icons/lu';
 import Modal from '../Modal';
+import AvatarGroup from '../AvatarGroup';
 
 const SelectUsers = ({ selectedUsers, setSelectedUsers }) => {
   const [allUsers, setAllUsers] = useState([]);
-  const [isModalOpen, setIsModalOpen] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [tempSelectedUsers, setTempSelectedUsers] = useState([]);
 
   useEffect(() => {
@@ -58,6 +59,14 @@ const SelectUsers = ({ selectedUsers, setSelectedUsers }) => {
         </button>
       )}
 
+        {selectedUsersAvatars.length > 0 && (
+          <div className='cursor-pointer'
+          onClick={() => setIsModalOpen(true)}
+          >
+            <AvatarGroup avatars={selectedUsersAvatars} maxVisible={3}/>
+          </div>
+        )}
+
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
@@ -88,12 +97,17 @@ const SelectUsers = ({ selectedUsers, setSelectedUsers }) => {
           ))}
         </div>
 
-        <div className="mt-4 flex justify-end">
+        <div className="pt-4 gap-2 flex justify-end">
           <button
-            onClick={handleAssign}
-            className="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 transition"
+            onClick={() => setIsModalOpen(false)}
+            className="card-btn"
           >
-            Assign Selected
+            CANCEL
+          </button>
+          <button
+          className='card-btn-fill'
+          onClick={handleAssign}
+          >DONE
           </button>
         </div>
       </Modal>
