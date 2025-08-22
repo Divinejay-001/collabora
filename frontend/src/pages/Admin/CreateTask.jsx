@@ -9,6 +9,7 @@ import { LuTrash2 } from 'react-icons/lu';
 import SelectDropdown from '../../components/Input/SelectDropdown';
 import SelectUsers from '../../components/Input/SelectUsers';
 import TodoListInput from '../../components/Input/TodoListInput';
+import AddAttachmentsInput from '../../components/Input/AddAttachmentsInput';
 
 const CreateTask = () => {
   const location = useLocation();
@@ -26,6 +27,7 @@ const CreateTask = () => {
   });
 
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
   const [openDeleteAlert, setOpenDeleteAlert] = useState(false);
 
   const handleValueChange = (key, value) => {
@@ -39,9 +41,10 @@ const CreateTask = () => {
       priority: 'Low',
       dueDate: '',
       assignedTo: [],
-      todoChecklists: [],
+      todoCheckLists: [],
       attachments: [],
     });
+    setError('');
   };
 
   // Load task if editing
@@ -54,28 +57,56 @@ const CreateTask = () => {
       setLoading(true);
       const res = await axiosInstance.get(`${API_PATHS.TASKS}/${taskId}`);
       if (res?.data) {
-        setTaskData(res.data);
+        setTaskData({
+          title: res.data.title || '',
+          description: res.data.description || '',
+          priority: res.data.priority || 'Low',
+          dueDate: res.data.dueDate || '',
+          assignedTo: res.data.assignedTo || [],
+          todoCheckLists: res.data.todoCheckLists || [],
+          attachments: res.data.attachments || [],
+        });
       }
-    } catch (err) {
+    } catch {
       toast.error('Failed to fetch task');
     } finally {
       setLoading(false);
     }
   };
 
-  const createTask = async () => {
-    try {
-      setLoading(true);
-      await axiosInstance.post(API_PATHS.TASKS, taskData);
-      toast.success('Task created successfully');
-      clearData();
-      navigate('/dashboard/tasks');
-    } catch (err) {
-      toast.error('Error creating task');
-    } finally {
-      setLoading(false);
-    }
-  };
+ const createTask = async () => {
+  setLoading(true);
+
+  try {
+    const payload = {
+      title: taskData.title,
+      description: taskData.description,
+      priority: taskData.priority,
+      dueDate: taskData.dueDate ? new Date(taskData.dueDate).toISOString() : null,
+      assignedTo: taskData.assignedTo.map(u => u._id || u.id || u), 
+      attachments: taskData.attachments.map(att =>
+        typeof att === "string" ? att : att.url || ""
+      ), // ✅ flat array of strings
+      todoCheckLists: taskData.todoCheckLists.map(item =>
+        typeof item === "string"
+          ? { text: item, completed: false }
+          : { text: item.text, completed: !!item.completed }
+      ),
+    };
+
+    const response = await axiosInstance.post(API_PATHS.TASKS.CREATE_TASK, payload);
+
+    toast.success("Task Created Successfully");
+    clearData();
+  } catch (error) {
+    console.error("Error creating task:", error.response?.data || error.message);
+    toast.error(error.response?.data?.message || "Failed to create task");
+  } finally {
+    setLoading(false);
+  }
+};
+
+ 
 
   const updateTask = async () => {
     try {
@@ -83,7 +114,7 @@ const CreateTask = () => {
       await axiosInstance.put(`${API_PATHS.TASKS}/${taskId}`, taskData);
       toast.success('Task updated successfully');
       navigate('/dashboard/tasks');
-    } catch (err) {
+    } catch {
       toast.error('Error updating task');
     } finally {
       setLoading(false);
@@ -96,25 +127,46 @@ const CreateTask = () => {
       await axiosInstance.delete(`${API_PATHS.TASKS}/${taskId}`);
       toast.success('Task deleted');
       navigate('/dashboard/tasks');
-    } catch (err) {
+    } catch {
       toast.error('Failed to delete task');
     } finally {
       setLoading(false);
+      setOpenDeleteAlert(false);
     }
   };
 
   const handleSubmit = async () => {
-    if (!taskData.title.trim()) {
-      toast.error('Task title is required');
+    setError(null);
+     
+  //input validation
+  if (!taskData.title.trim()){
+      setError('Task title is required.');
+      return;
+    }
+    if (!taskData.description.trim()) {
+      setError('Description is required.');
+      return;
+    }
+    if(!taskData.dueDate) {
+      setError('Due date is required.');
+      return;
+    }
+    if(taskData.assignedTo?.length === 0){
+      setError('Task not assigned to any member.');
+      return;
+    }
+    if(taskData.todoCheckLists?.length === 0){
+      setError('Add atleast one todo task.');
       return;
     }
 
     if (taskId) {
-      await updateTask();
-    } else {
-      await createTask();
+      updateTask();
+      return;
     }
+    createTask()
   };
+  
 
   return (
     <DashBoardLayout activeMenu="Create Tasks">
@@ -189,33 +241,61 @@ const CreateTask = () => {
                 </div>
               </div>
 
+              <div className='mt-3'>
+                <label className='text-xs font-medium text-slate-600 dark:text-slate-300'>TODO CHECKLIST</label>
+                <TodoListInput
+                  todoList={taskData.todoCheckLists}
+                  setTodoList={(value) => handleValueChange('todoCheckLists', value)}
+                />
+              </div>
+
+              <div className='mt-3'>
+                <label className="text-xs font-medium text-slate-600 dark:text-slate-300">Add Attachments</label>
+                <AddAttachmentsInput
+                  attachments={taskData.attachments}
+                  setAttachments={(value) => handleValueChange('attachments', value)}
+                />
+              </div>
+
+              {error && <p className='text-red-600 text-xs mt-5'>{error}</p>}
+
               <div className="mt-6 flex justify-end">
                 <button
                   onClick={handleSubmit}
-                  className="bg-gradient-to-r from-primary to-secondary dark:from-primary dark:to-secondary hover:bg-secondary text-white px-5 py-2 rounded-md  transition"
+                  className="add-btn"
                   disabled={loading}
                 >
-                  {loading ? 'Saving...' : taskId ? 'Update Task' : 'Create Task'}
+                  {loading ? 'Saving...' : taskId ? 'UPDATE TASK' : 'CREATE TASK'}
                 </button>
               </div>
-            </div>
-
-            <div className='mt-3'>
-              <label className='text-xs font-medium text-slate-600 dark:text-slate-300'>
-                TODO CHECKLIST
-              </label>
-
-              <TodoListInput
-              todoList={taskData?.todoCheckLists}
-              setTodoList={(value) =>{
-                handleValueChange("todoCheckLists", value)
-              }}
-              />
             </div>
           </div>
         </div>
 
-        {/* You can add a Delete Confirmation Modal here using openDeleteAlert */}
+        {/* Delete Confirmation Modal */}
+        {openDeleteAlert && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+            <div className="bg-white dark:bg-slate-800 p-6 rounded-lg shadow-lg w-80">
+              <h3 className="text-lg font-semibold text-slate-700 dark:text-white">Delete Task?</h3>
+              <p className="text-sm text-slate-500 mt-2">This action cannot be undone.</p>
+              <div className="mt-4 flex justify-end gap-3">
+                <button
+                  onClick={() => setOpenDeleteAlert(false)}
+                  className="px-4 py-2 text-sm border rounded hover:bg-gray-100 dark:hover:bg-slate-700"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={deleteTask}
+                  className="px-4 py-2 text-sm bg-red-500 text-white rounded hover:bg-red-600"
+                  disabled={loading}
+                >
+                  {loading ? 'Deleting...' : 'Delete'}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </DashBoardLayout>
   );
