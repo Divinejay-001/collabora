@@ -16,13 +16,14 @@ const TaskStatusTabs = ({ activeTab, setActiveTab, tabs }) => {
           >
             <div className="flex items-center">
               <span className="text-xs">{tab.label}</span>
-              <span
-                className={`text-xs ml-2 px-2 py-0.5 rounded-full ${
-                  activeTab === tab.label 
-                    ? 'bg-primary text-white'
-                    : 'bg-gray-200/70 text-gray-600'
-                }`}
-              >
+             <span
+  className={`text-xs ml-2 px-2 py-0.5 rounded-full ${
+    activeTab === tab.label 
+      ? 'bg-primary text-white'
+      : 'bg-gray-200/70 text-gray-600 dark:bg-gray-700 dark:text-gray-300'
+  }`}
+>
+
                 {tab.count}
               </span>
             </div>
