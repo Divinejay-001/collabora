@@ -1,21 +1,21 @@
-import React from 'react'
-import Progress from '../Progress'
-import AvatarGroup from '../AvatarGroup'
-import { LuPaperclip } from 'react-icons/lu'
-import moment from 'moment'
+import React from "react";
+import Progress from "../Progress";
+import AvatarGroup from "../AvatarGroup";
+import { LuPaperclip } from "react-icons/lu";
+import moment from "moment";
 
 const TaskCard = ({
-  title,
-  description,
-  priority,
-  status,
-  progress,
+  title = "Untitled Task",
+  description = "",
+  priority = "Low",
+  status = "Pending",
+  progress = 0,
   createdAt,
   dueDate,
-  assignedTo,
-  attachmentCount,
-  completedTodoCount,
-  todoCheckList,
+  assignedTo = [],
+  attachmentCount = 0,
+  completedTodoCount = 0,
+  todoCheckList = [],
   onClick,
 }) => {
   const getStatusTagColor = () => {
@@ -47,10 +47,14 @@ const TaskCard = ({
     >
       {/* Top Tags */}
       <div className="flex items-end gap-3 px-4">
-        <div className={`text-[11px] font-medium px-4 py-0.5 rounded ${getStatusTagColor()}`}>
+        <div
+          className={`text-[11px] font-medium px-4 py-0.5 rounded ${getStatusTagColor()}`}
+        >
           {status}
         </div>
-        <div className={`text-[11px] font-medium px-4 py-0.5 rounded ${getPriorityTagColor()}`}>
+        <div
+          className={`text-[11px] font-medium px-4 py-0.5 rounded ${getPriorityTagColor()}`}
+        >
           {priority} Priority
         </div>
       </div>
@@ -68,14 +72,17 @@ const TaskCard = ({
         <p className="text-sm font-medium text-gray-800 dark:text-gray-100 mt-4 line-clamp-2">
           {title}
         </p>
-        <p className="text-sm text-gray-500 dark:text-gray-400 mt-1.5 line-clamp-2 leading-[18px]">
-          {description}
-        </p>
+        {description && (
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1.5 line-clamp-2 leading-[18px]">
+            {description}
+          </p>
+        )}
 
+        {/* Todo Progress */}
         <p className="text-[13px] text-gray-700/80 dark:text-gray-300 font-medium mt-2 mb-2 leading-[18px]">
           Task Done:{" "}
           <span className="font-semibold text-gray-700 dark:text-gray-200">
-            {completedTodoCount} / {todoCheckList.length || 0}
+            {completedTodoCount} / {todoCheckList?.length || 0}
           </span>
         </p>
 
@@ -84,27 +91,36 @@ const TaskCard = ({
 
       {/* Bottom Row */}
       <div className="px-4">
+        {/* Dates */}
         <div className="flex items-center justify-between my-1">
           <div>
-            <label className="text-xs text-gray-500 dark:text-gray-400">Start Date</label>
+            <label className="text-xs text-gray-500 dark:text-gray-400">
+              Start Date
+            </label>
             <p className="text-[13px] font-medium text-gray-900 dark:text-gray-100">
-              {moment(createdAt).format("Do MMM YYYY")}
+              {createdAt ? moment(createdAt).format("Do MMM YYYY") : "—"}
             </p>
           </div>
           <div>
-            <label className="text-xs text-gray-500 dark:text-gray-400">Due Date</label>
+            <label className="text-xs text-gray-500 dark:text-gray-400">
+              Due Date
+            </label>
             <p className="text-[13px] font-medium text-gray-900 dark:text-gray-100">
-              {moment(dueDate).format("Do MMM YYYY")}
+              {dueDate ? moment(dueDate).format("Do MMM YYYY") : "—"}
             </p>
           </div>
         </div>
+
+        {/* Avatars + Attachments */}
         <div className="flex items-center justify-between mt-3">
-          <AvatarGroup avatars={assignedTo || []} />
+          <AvatarGroup avatars={assignedTo} />
 
           {attachmentCount > 0 && (
             <div className="flex items-center gap-2 bg-blue-50 dark:bg-blue-900 px-2.5 py-1.5 rounded-lg">
               <LuPaperclip className="text-primary" />{" "}
-              <span className="text-xs text-gray-900 dark:text-gray-100">{attachmentCount}</span>
+              <span className="text-xs text-gray-900 dark:text-gray-100">
+                {attachmentCount}
+              </span>
             </div>
           )}
         </div>

@@ -31,22 +31,21 @@ const SelectUsers = ({ selectedUsers, setSelectedUsers }) => {
     }
   }, [selectedUsers]);
 
-  const toggleUserSelection = (userId) => {
-    setTempSelectedUsers((prev) =>
-      prev.includes(userId)
-        ? prev.filter((id) => id !== userId)
-        : [...prev, userId]
-    );
-  };
+ const toggleUserSelection = (user) => {
+  setTempSelectedUsers((prev) =>
+    prev.some((u) => u._id === user._id)
+      ? prev.filter((u) => u._id !== user._id)
+      : [...prev, user]
+  );
+};
 
-  const handleAssign = () => {
-    setSelectedUsers(tempSelectedUsers);
-    setIsModalOpen(false);
-  };
+const handleAssign = () => {
+  setSelectedUsers(tempSelectedUsers); // ✅ store full objects
+  setIsModalOpen(false);
+};
 
-  const selectedUsersAvatars = allUsers
-    .filter((user) => selectedUsers.includes(user._id))
-    .map((user) => user.profileImageUrl);
+// Avatars mapping works fine now:
+const selectedUsersAvatars = selectedUsers.map((user) => user.profileImageUrl);
 
   return (
     <div className='space-y-4 mt-2'>

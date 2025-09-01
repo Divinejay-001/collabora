@@ -27,7 +27,7 @@ const ManageTasks = () => {
         params: { status: filterStatus === "All" ? "" : filterStatus },
       });
 
-      setAllTasks(response.data?.tasks?.length > 0 ? response.data.tasks : []);
+      setAllTasks(response.data?.tasks || []);
 
       const statusSummary = response.data?.statusSummary || {};
       const statusArray = [
@@ -48,7 +48,9 @@ const ManageTasks = () => {
     navigate(`/admin/create-task`, { state: { taskId: taskData._id } });
   };
 
-  const handleDownloadReport = async () => {};
+  const handleDownloadReport = async () => {
+    // TODO: implement CSV/Excel export
+  };
 
   useEffect(() => {
     getAllTasks();
@@ -96,36 +98,41 @@ const ManageTasks = () => {
 
         {/* Task Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
-          {loading
-            ? // Skeleton task cards while loading
-              Array.from({ length: 6 }).map((_, i) => (
-                <div
-                  key={i}
-                  className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-md border border-gray-200/50 dark:border-gray-700"
-                >
-                  <SkeletonBox className="h-5 w-1/2 mb-3" />
-                  <SkeletonBox className="h-4 w-2/3 mb-2" />
-                  <SkeletonBox className="h-4 w-1/3 mb-4" />
-                  <SkeletonBox className="h-10 w-full rounded-lg" />
-                </div>
-              ))
-            : allTasks?.map((item) => (
-                <TaskCard
-                  key={item._id}
-                  title={item.title}
-                  description={item.description}
-                  priority={item.priority}
-                  status={item.status}
-                  progress={item.progress}
-                  createdAt={item.createdAt}
-                  dueDate={item.dueDate}
-                  assignedTo={item.assignedTo?.map((user) => user.profileImageUrl)}
-                  attachmentCount={item.attachments?.length || 0}
-                  completedTodoCount={item.completedTodoCount || 0}
-                  todoCheckList={item.todoCheckList || []}
-                  onClick={() => handleClick(item)}
-                />
-              ))}
+          {loading ? (
+            Array.from({ length: 6 }).map((_, i) => (
+              <div
+                key={i}
+                className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-md border border-gray-200/50 dark:border-gray-700"
+              >
+                <SkeletonBox className="h-5 w-1/2 mb-3" />
+                <SkeletonBox className="h-4 w-2/3 mb-2" />
+                <SkeletonBox className="h-4 w-1/3 mb-4" />
+                <SkeletonBox className="h-10 w-full rounded-lg" />
+              </div>
+            ))
+          ) : allTasks?.length > 0 ? (
+            allTasks.map((item) => (
+              <TaskCard
+                key={item._id}
+                title={item.title}
+                description={item.description}
+                priority={item.priority}
+                status={item.status}
+                progress={item.progress}
+                createdAt={item.createdAt}
+                dueDate={item.dueDate}
+                assignedTo={item.assignedTo?.map((user) => user.profileImageUrl)}
+                attachmentCount={item.attachments?.length || 0}
+                completedTodoCount={item.completedTodoCount || 0}
+                todoChecklists={item.todoChecklists || []}
+                onClick={() => handleClick(item)}
+              />
+            ))
+          ) : (
+            <p className="text-center text-gray-500 dark:text-gray-400 mt-6 col-span-3">
+              No tasks found for this status.
+            </p>
+          )}
         </div>
       </div>
     </DashBoardLayout>

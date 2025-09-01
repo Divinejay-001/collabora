@@ -83,19 +83,22 @@ const getTasks = async (req, res) => {
 // @route GET /api/tasks/:id
 // @access Private
 const getTaskById = async (req, res) => {
-    try {
-      const task = await Task.findById(req.params.id).populate(
-        "assignedTo",
-        "name email profileImageUrl"
-      );
-      if (!task) {
-        return res.status(404).json({ message: "Task not found" });
-      } 
-      res.json(task);
-    } catch (error) {
-        res.status(500).json({ message: "Server error", error: error.message });
+  try {
+    const task = await Task.findById(req.params.id)
+      .populate("assignedTo", "name email profileImageUrl")
+      .populate("createdBy", "name email profileImageUrl"); // ✅ include creator info too
+
+    if (!task) {
+      return res.status(404).json({ message: "Task not found" });
     }
-}
+
+    res.json(task); // attachments, todoChecklists, dueDate, etc. come by default
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+
 
 // Create a new task(Admin only)
 // @route POST /api/tasks
