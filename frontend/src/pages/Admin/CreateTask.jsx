@@ -144,7 +144,7 @@ const CreateTask = () => {
       await axiosInstance.delete(API_PATHS.TASKS.DELETE_TASK(taskId));
       toast.success('Task deleted');
 // inside createTask, updateTask, deleteTask success cases:
-navigate('/admin/manage-tasks');  // ✅ instead of /admin/create-task
+navigate('/admin/tasks');  // ✅ instead of /admin/create-task
     } catch {
       toast.error('Failed to delete task');
     } finally {

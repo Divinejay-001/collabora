@@ -15,7 +15,7 @@ const TaskCard = ({
   assignedTo = [],
   attachmentCount = 0,
   completedTodoCount = 0,
-  todoCheckList = [],
+  todoChecklists = [],
   onClick,
 }) => {
   const getStatusTagColor = () => {
@@ -82,11 +82,41 @@ const TaskCard = ({
         <p className="text-[13px] text-gray-700/80 dark:text-gray-300 font-medium mt-2 mb-2 leading-[18px]">
           Task Done:{" "}
           <span className="font-semibold text-gray-700 dark:text-gray-200">
-            {completedTodoCount} / {todoCheckList?.length || 0}
+            {completedTodoCount} / {todoChecklists?.length || 0}
           </span>
         </p>
 
         <Progress progress={progress} status={status} />
+
+        {/* ✅ Checklist Items */}
+        {todoChecklists.length > 0 && (
+          <div className="mt-3">
+            <h4 className="text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Checklist
+            </h4>
+            <ul className="space-y-1">
+              {todoChecklists.map((todo, idx) => (
+                <li key={idx} className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    checked={todo.completed}
+                    readOnly
+                    className="h-4 w-4"
+                  />
+                  <span
+                    className={`text-sm ${
+                      todo.completed
+                        ? "line-through text-gray-400"
+                        : "text-gray-700 dark:text-gray-200"
+                    }`}
+                  >
+                    {todo.text}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </div>
 
       {/* Bottom Row */}

@@ -29,10 +29,11 @@ export const API_PATHS = {
         UPDATE_TODO_CHECKLIST: (taskId) => `/api/tasks/${taskId}/todo`,
     },
 
-    REPORTS: {
-        EXPORT_TASKS: "/api/reports/export-tasks",
-        EXPORT_USERS: "/api/reports/export-users",
-    },
+   REPORTS: {
+  EXPORT_TASKS: "/api/reports/export/tasks",
+  EXPORT_USERS: "/api/reports/export/users",
+},
+
 
     IMAGE: {
         UPLOAD_IMAGE: "/api/image/upload-image",

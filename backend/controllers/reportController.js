@@ -78,7 +78,7 @@ users.forEach((user)=>{
 userTasks.forEach((task) => {
    if(task.assignedTo){
     task.assignedTo.forEach((assignedUser) => {
-        if(userTaskMap[assignedUser_id]){
+        if(userTaskMap[assignedUser._id]){
             userTaskMap[assignedUser._id].tasksCount += 1;
             if(task.status === 'Pending'){
                 userTaskMap[assignedUser._id].pendingTasks += 1;

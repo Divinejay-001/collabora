@@ -21,23 +21,37 @@ const ManageTasks = () => {
   const navigate = useNavigate();
 
   const getAllTasks = async () => {
-    setLoading(true);
-    try {
-      const response = await axiosInstance.get(API_PATHS.TASKS.GET_TASKS, {
-        params: { status: filterStatus === "All" ? "" : filterStatus },
+  setLoading(true);
+  try {
+    const response = await axiosInstance.get(API_PATHS.TASKS.GET_TASKS, {
+      params: { status: filterStatus === "All" ? "" : filterStatus },
+    });
+
+    console.log("Tasks API response:", response.data);
+
+    // 🔍 Debug deeper: log each task
+    if (response.data?.tasks) {
+      response.data.tasks.forEach((t) => {
+        console.log("Task:", {
+          id: t._id,
+          title: t.title,
+          todoChecklists: t.todoChecklists,
+          completedTodoCount: t.completedTodoCount,
+        });
       });
+    }
 
-      setAllTasks(response.data?.tasks || []);
+    setAllTasks(response.data?.tasks || []);
 
-      const statusSummary = response.data?.statusSummary || {};
-      const statusArray = [
-        { label: "All", count: statusSummary.all || 0 },
-        { label: "Pending", count: statusSummary.pendingTasks || 0 },
-        { label: "In Progress", count: statusSummary.inProgress || 0 },
-        { label: "Completed", count: statusSummary.completed || 0 },
-      ];
-      setTabs(statusArray);
-    } catch (error) {
+  const statusSummary = response.data?.statusSummary || {};
+  const statusArray = [
+    { label: "All", count: statusSummary.all || 0 },
+    { label: "Pending", count: statusSummary.pendingTasks || 0 },
+    { label: "In Progress", count: statusSummary.inProgress || 0 },
+    { label: "Completed", count: statusSummary.completed || 0 },
+  ];
+  setTabs(statusArray);
+} catch (error) {
       console.error("Error fetching tasks:", error);
     } finally {
       setLoading(false);
@@ -48,9 +62,26 @@ const ManageTasks = () => {
     navigate(`/admin/create-task`, { state: { taskId: taskData._id } });
   };
 
+  // download task report
   const handleDownloadReport = async () => {
-    // TODO: implement CSV/Excel export
-  };
+    try {
+      const response = await axiosInstance.get(API_PATHS.REPORTS.EXPORT_TASKS, {
+        responseType: "blob",
+      });
+      // Create a URL for the blob
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'tasks_details.xlsx');
+      document.body.appendChild(link);
+      link.click();
+      link.parentNode.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Error downloading task report:", error);
+      toast.error("Failed to download task report");
+    }
+  }
 
   useEffect(() => {
     getAllTasks();
