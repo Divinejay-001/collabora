@@ -1,4 +1,4 @@
-export const BASE_URL = "http://localhost:5000";
+export const BASE_URL = "https://collabora-mxxp.onrender.com";
 
 //utils/apiPaths.js
 export const API_PATHS = {
