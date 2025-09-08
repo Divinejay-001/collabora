@@ -5,6 +5,7 @@ import { API_PATHS } from '../../utils/apiPaths';
 import DashBoardLayout from '../../components/layouts/DashBoardLayout';
 import moment from 'moment';
 import AvatarGroup from '../../components/AvatarGroup';
+import { LuSquareArrowOutUpRight } from 'react-icons/lu';
 
 const ViewTaskDetails = () => {
   const { id } = useParams();
@@ -23,6 +24,14 @@ const ViewTaskDetails = () => {
     }
   };
 
+  const handleLinkClick = (link) => {
+    if (!/^https?:\/\//i.test(link)) {
+      link = 'http://' + link; // prepend http if missing
+    }
+  window.open(link, "_blank"); // opens attachment in new tab
+};
+
+
   const getTaskDetailsById = async (taskId) => {
     try {
       setLoading(true);
@@ -38,25 +47,37 @@ const ViewTaskDetails = () => {
   };
 
   const updateTodoChecklist = async (index) => {
-    try {
-      setUpdating(true);
-      const updatedTodos = [...task.todoChecklists];
-      updatedTodos[index].completed = !updatedTodos[index].completed;
+  if (!task || !task.todoChecklists) return;
 
-      const response = await axiosInstance.put(
-        API_PATHS.TASKS.UPDATE_TASK_CHECKLIST(task._id),
-        { todoChecklists: updatedTodos }
-      );
+  // Clone current state
+  const updatedTodos = [...task.todoChecklists];
+  const taskId = id;
 
-      if (response.data?.task) {
-        setTask(response.data.task);
-      }
-    } catch (error) {
-      console.error("Error updating checklist:", error);
-    } finally {
-      setUpdating(false);
+  // Toggle the value locally
+  updatedTodos[index].completed = !updatedTodos[index].completed;
+
+  // Optimistically update UI
+  setTask({ ...task, todoChecklists: updatedTodos });
+
+  try {
+    const response = await axiosInstance.put(
+      API_PATHS.TASKS.UPDATE_TODO_CHECKLIST(taskId),
+      { todoChecklists: updatedTodos }
+    );
+
+    if (response.status === 200) {
+      // Make sure state is synced with backend response
+      setTask(response.data?.task || task);
     }
-  };
+  } catch (error) {
+    console.error("Failed to update checklist:", error);
+
+    // Revert change if API call fails
+    updatedTodos[index].completed = !updatedTodos[index].completed;
+    setTask({ ...task, todoChecklists: updatedTodos });
+  }
+};
+
 
   useEffect(() => {
     if (id) {
@@ -140,7 +161,7 @@ const ViewTaskDetails = () => {
                 </div>
               </div>
 
-              <div className='mt-4'>
+              <div className='mt-2'>
                 <label className='text-xs font-medium text-slate-500 dark:text-slate-300'>
                   Todo Checklist
                 </label>
@@ -153,6 +174,25 @@ const ViewTaskDetails = () => {
                   />
                 ))}
               </div>
+
+              {task?.attachments?.length > 0 && (
+                <div className='mt-2'>
+                  <label htmlFor="" className='text-xs font-medium text-slate-500 '>
+                    Attachments
+                  </label>
+
+                 {task?.attachments?.map((link, index) => (
+                <Attachment 
+                  key={`link_${index}`}
+                  link={link}
+                  index={index}
+                  onClick={() => handleLinkClick(link)}
+                />
+              ))}
+
+
+                </div>
+              )}
             </div>
           </div>
         ) : (
@@ -187,3 +227,18 @@ const TodoCheckList = ({ text, isChecked, onChange }) => (
     </p>
   </div>
 );
+
+const Attachment = ({ link, index, onClick }) => {
+  return <div className='flex justify-between bg-gray-50 border border-gray-100 px-3 py-2 rounded-md mb-3 mt-2 cursor-pointer'
+  onClick={onClick}
+>
+  <div className='flex-1 flex items-center gap-3 border border-gray-100'>
+    <span className='text-xs text-gray-400 font-semibold mr-2'>
+      {index < 9 ? `0${index + 1}` : index + 1}
+    </span>
+
+    <p className='text-xs text-black'>{link}</p>
+  </div>
+  <LuSquareArrowOutUpRight className='text-gray-400'/>
+  </div>
+}

@@ -1,26 +1,18 @@
-const multer = require('multer');
+const multer = require("multer");
+const { CloudinaryStorage } = require("multer-storage-cloudinary");
+const cloudinary = require("../config/cloudinary");
 
-//configure storage
-
-const storage = multer.diskStorage({
-  destination: (req, file, cb) =>{
-    cb(null, 'uploads/');
-  },
-  filename:  (req, file, cb) => {
-    cb(null, `${Date.now()}-${file.originalname}`);
+// Configure Cloudinary storage
+const storage = new CloudinaryStorage({
+  cloudinary,
+  params: {
+    folder: "collabora", // Cloudinary folder
+    allowed_formats: ["jpg", "jpeg", "png", "gif", "webp", "svg"],
+    public_id: (req, file) => `${Date.now()}-${file.originalname}`,
   },
 });
 
-//configure file filter
-const fileFilter = (req, file, cb) => {
-const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml'];
-  if (allowedTypes.includes(file.mimetype)) {
-    cb(null, true);
-  } else {
-    cb(new Error('Invalid file type. Only JPEG, PNG and GIF are allowed!'), false);
-  }
-};
-
-const upload = multer({storage, fileFilter});
+// Create the upload middleware
+const upload = multer({ storage });
 
 module.exports = upload;

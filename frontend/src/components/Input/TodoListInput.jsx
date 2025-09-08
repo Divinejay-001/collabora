@@ -38,12 +38,12 @@ const TodoListInput = ({ todoList = [], setTodoList }) => {
             className="flex items-center justify-between bg-gray-50 dark:bg-[#1a1a1a] border border-gray-200 px-3 py-2 rounded-md mb-2"
           >
             <div className="flex items-center gap-2">
-              <input
+              {/* <input
                 type="checkbox"
                 checked={!!item.completed}
                 onChange={() => handleToggleComplete(index)}
                 className="h-3.5 w-3.5 rounded border-gray-300 text-blue-500 focus:ring-blue-400"
-              />
+              /> */}
               <p
                 className={`text-xs dark:text-gray-400 ${
                   item.completed ? "line-through text-gray-400" : "text-black"
@@ -75,7 +75,7 @@ const TodoListInput = ({ todoList = [], setTodoList }) => {
         />
 
         <button
-          className="flex items-center gap-1 bg-blue-500 text-white px-3 py-2 rounded-md text-sm hover:bg-blue-600"
+          className="flex items-center gap-1 bg-primary text-white px-3 py-2 rounded-md text-sm hover:bg-blue-600"
           onClick={handleAddOption}
         >
           <HiPlus className="text-lg" /> Add

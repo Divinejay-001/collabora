@@ -12,8 +12,8 @@ router.get("/", protect, getTasks); // Get all tasks
 router.get("/:id", protect, getTaskById); // Get specific task by ID
 router.post("/", protect, adminOnly, createTask); // Create a new task
 router.delete("/:id/", protect, adminOnly, deleteTask); // Delete a task
-router.put("/:id/status", protect, adminOnly, updateTaskStatus); // Update a task
-router.put("/:id/todo", protect, adminOnly, updateTaskChecklist); // Update a task
+router.put("/:id/status", protect,  updateTaskStatus); // Update a task
+router.put("/:id/todo", protect,  updateTaskChecklist); // Update a task
 router.put("/:id", protect, adminOnly, updateTask); // 👈 New route here
 
 

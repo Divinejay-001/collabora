@@ -27,19 +27,20 @@ const getTasks = async (req, res) => {
     }
 
     // Add completed todo checklist count + include checklist array
-    tasks = await Promise.all(
-      tasks.map(async (task) => {
-        const completedCount = Array.isArray(task.todoChecklists)
-          ? task.todoChecklists.filter((item) => item.completed).length
-          : 0;
+  tasks = await Promise.all(
+  tasks.map(async (task) => {
+const checklistArray = Array.isArray(task.todoChecklists) ? task.todoChecklists : [];
 
-        return {
-          ...task._doc,
-          completedTodoCount: completedCount,
-          todoChecklists: task.todoChecklists || [],
-        };
-      })
-    );
+    const completedCount = checklistArray.filter((item) => item.completed).length;
+
+    return {
+      ...task._doc,
+      completedTodoCount: completedCount,
+      todoChecklists: checklistArray, // 👈 always send as todoChecklists
+    };
+  })
+);
+
 
 console.log(
   "API tasks response with todoChecklists:",
@@ -163,9 +164,17 @@ const updateTask = async (req, res) => {
     task.description = req.body.description || task.description;
     task.priority = req.body.priority || task.priority;
     task.dueDate = req.body.dueDate || task.dueDate;
-    task.todoChecklists = req.body.todoChecklists || task.todoChecklists;
     task.attachments = req.body.attachments || task.attachments;
 
+    // ✅ Make sure todoChecklists updates correctly
+    if (Array.isArray(req.body.todoChecklists)) {
+      task.todoChecklists = req.body.todoChecklists;
+      task.completedTodoCount = req.body.todoChecklists.filter(
+        (item) => item.completed
+      ).length;
+    }
+
+    // ✅ Assigned users
     if (req.body.assignedTo) {
       if (!Array.isArray(req.body.assignedTo)) {
         return res
@@ -176,6 +185,7 @@ const updateTask = async (req, res) => {
     }
 
     const updatedTask = await task.save();
+
     res.json({
       message: "Task updated successfully",
       updatedTask,
@@ -184,6 +194,7 @@ const updateTask = async (req, res) => {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
+
 
 // Delete a task (Admin only)
 // @route DELETE /api/tasks/:id
