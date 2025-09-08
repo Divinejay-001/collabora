@@ -38,11 +38,15 @@ const upload = multer({ storage, fileFilter });
 
 // Middleware to handle cors
 app.use(
-    cors({
-        origin: process.env.CLIENT_URL || "*",
-        methods: ["GET", "POST", "PUT", "DELETE"],
-        allowedHeaders: ["Content-Type", "Authorization"],
-    })
+  cors({
+    origin: [
+      "http://localhost:5173", // local dev frontend
+      "http://coollabora.netlify.app", // replace with your Netlify domain
+    ],
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true, // ✅ allow cookies or auth headers
+  })
 );
 
 // Connect to the database
