@@ -40,12 +40,12 @@ const upload = multer({ storage, fileFilter });
 app.use(
   cors({
     origin: [
-      "http://localhost:5173", // local dev frontend
-      "http://coollabora.netlify.app", // replace with your Netlify domain
+      "http://localhost:5173", 
+      "https://coollabora.netlify.app" // ✅ must be https
     ],
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
-    credentials: true, // ✅ allow cookies or auth headers
+    credentials: true,
   })
 );
 
