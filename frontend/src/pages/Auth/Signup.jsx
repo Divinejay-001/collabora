@@ -47,10 +47,8 @@ const uploadImage = async (file) => {
 };
 
   // Handle Sign Up Form Submission
-   const handleSignUp = async (e) => {
+ const handleSignUp = async (e) => {
   e.preventDefault();
-
-  let profileImageUrl = "";
 
   if (!fullName) return setError("Please enter a valid name.");
   if (!validateEmail(email)) return setError("Please enter a valid email address.");
@@ -58,32 +56,27 @@ const uploadImage = async (file) => {
   setError("");
 
   try {
+    const formData = new FormData();
+    formData.append("name", fullName);
+    formData.append("email", email);
+    formData.append("password", password);
+    formData.append("adminInviteToken", adminInviteToken || "");
     if (profilePic) {
-      const imgUploadRes = await uploadImage(profilePic);
-      profileImageUrl = imgUploadRes.imageUrl || "";
+      formData.append("image", profilePic); // ✅ directly send file
     }
 
-    const response = await axiosInstance.post(API_PATHS.AUTH.REGISTER, {
-      name: fullName,
-      email,
-      password,
-      profileImageUrl,
-      adminInviteToken,
+    const response = await axiosInstance.post(API_PATHS.AUTH.REGISTER, formData, {
+      headers: { "Content-Type": "multipart/form-data" },
     });
 
     const { token, role } = response.data;
 
     if (token) {
-      // ✅ Store token immediately
       localStorage.setItem("token", token);
 
-      // ✅ Fetch profile manually
       const profileRes = await axiosInstance.get(API_PATHS.AUTH.GET_PROFILE);
-
-      // ✅ Update user context manually with the profile and token
       updateUser({ ...profileRes.data, token });
 
-      // ✅ Navigate based on role
       if (role === "admin") {
         navigate("/admin/dashboard");
       } else {
@@ -95,6 +88,7 @@ const uploadImage = async (file) => {
     setError("Signup failed. Please try again.");
   }
 };
+
 
   return (
     <AuthLayout>

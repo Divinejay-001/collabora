@@ -36,7 +36,7 @@ const registerUser = async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    // ✅ Multer-Cloudinary gives Cloudinary URL directly
+    // ✅ Cloudinary URL if image uploaded
     const profileImageUrl = req.file ? req.file.path : null;
 
     // create user
@@ -60,6 +60,8 @@ const registerUser = async (req, res) => {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
+
+
 // @desc Login user
 // @route POST /api/auth/login
 // @access Public
