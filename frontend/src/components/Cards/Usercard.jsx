@@ -8,14 +8,14 @@ const Usercard = ({ userInfo }) => {
           <img
             src={userInfo?.profileImageUrl || "/default-avatar.png"}
             alt="Avatar"
-            className="rounded-full border-2 border-white w-16 h-16 object-cover"
+            className="rounded-full border-2 border-white w-14 h-14 sm:w-16 sm:h-16 object-cover"
           />
 
           <div>
             <div className="flex items-center gap-2">
-              <p className="text-sm font-medium">{userInfo?.name}</p>
+              <p className="text-sm sm:text-base font-medium">{userInfo?.name}</p>
               {userInfo?.role && (
-                <span className="px-2 py-0.5 rounded-full text-xs bg-green-100 text-green-600">
+                <span className="px-2 py-0.5 rounded-full text-[10px] sm:text-xs bg-green-100 text-green-600">
                   {userInfo.role}
                 </span>
               )}
@@ -25,7 +25,8 @@ const Usercard = ({ userInfo }) => {
         </div>
       </div>
 
-      <div className="flex items-end gap-3 mt-5">
+      {/* Task Statuses */}
+      <div className="flex flex-wrap gap-2 mt-5">
         <StatCard
           label="Pending"
           count={userInfo?.pendingTasks || 0}
@@ -63,9 +64,10 @@ const StatCard = ({ label, count, status }) => {
 
   return (
     <div
-      className={`flex-1 text-[12px]  lg:text-[10px] font-medium ${getStatusTagColor()} px-4 py-0.5 rounded`}
+      className={`flex-1 text-[11px] sm:text-[12px] font-medium ${getStatusTagColor()} 
+        px-2 py-1 rounded text-center`}
     >
-      <span className="text-[12px]  font-semibold">{count}</span> {label}
+      <span className="font-semibold">{count}</span> {label}
     </div>
   )
 }

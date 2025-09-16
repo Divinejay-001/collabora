@@ -284,33 +284,38 @@ navigate('/admin/tasks');  // ✅ instead of /admin/create-task
         </div>
 
         {/* Delete Confirmation Modal */}
-        {openDeleteAlert && (
-          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-            <div className="bg-white dark:bg-slate-800 p-6 rounded-lg shadow-lg w-80">
-              <h3 className="text-lg font-semibold text-slate-700 dark:text-white">
-                Delete Task?
-              </h3>
-              <p className="text-sm text-slate-500 mt-2">
-                This action cannot be undone.
-              </p>
-              <div className="mt-4 flex justify-end gap-3">
-                <button
-                  onClick={() => setOpenDeleteAlert(false)}
-                  className="px-4 py-2 text-sm border rounded hover:bg-gray-100 dark:hover:bg-slate-700"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={deleteTask}
-                  className="px-4 py-2 text-sm bg-red-500 text-white rounded hover:bg-red-600"
-                  disabled={loading}
-                >
-                  {loading ? 'Deleting...' : 'Delete'}
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
+    {/* Delete Confirmation Modal */}
+{openDeleteAlert && (
+  <div className="fixed inset-0 bg-black/50 z-50 overflow-y-auto">
+    <div className="flex items-center justify-center min-h-screen p-4">
+      <div className="bg-white dark:bg-slate-800 p-6 rounded-lg shadow-lg w-80">
+        <h3 className="text-lg font-semibold text-slate-700 dark:text-white">
+          Delete Task?
+        </h3>
+        <p className="text-sm text-slate-500 mt-2">
+          This action cannot be undone.
+        </p>
+
+        <div className="mt-4 flex justify-end gap-3">
+          <button
+            onClick={() => setOpenDeleteAlert(false)}
+            className="px-4 py-2 text-sm border rounded hover:bg-gray-100 dark:hover:bg-slate-700"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={deleteTask}
+            className="px-4 py-2 text-sm bg-red-500 text-white rounded hover:bg-red-600"
+            disabled={loading}
+          >
+            {loading ? 'Deleting...' : 'Delete'}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+)}
+
       </div>
     </DashBoardLayout>
   );

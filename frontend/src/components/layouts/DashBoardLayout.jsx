@@ -21,7 +21,7 @@ const DashBoardLayout = ({ children, activeMenu }) => {
           </div>
 
           {/* Main Content */}
-          <div className="grow overflow-y-auto px-5 py-4 h-full text-black dark:text-gray-200">
+          <div className="grow overflow-y-auto px-5 py-4 pb-24 h-full text-black dark:text-gray-200">
             {children}
           </div>
         </div>
