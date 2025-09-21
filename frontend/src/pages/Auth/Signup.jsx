@@ -69,16 +69,24 @@ const Signup = () => {
 
   return (
     <AuthLayout>
-      <div className="w-full min-h-screen flex flex-col justify-center px-4 sm:px-6 lg:px-8 
-                      sm:py-0 py-6 overflow-y-auto">
-        <div className="max-w-md w-full mx-auto">
-          <h3 className="text-xl font-semibold text-black">Create An Account</h3>
-          <p className="text-xs text-slate-700 mt-[1px] mb-6 sm:mb-3">
+      {/* Wrapper adjusts based on screen size */}
+      <div className="w-full min-h-screen flex flex-col justify-center items-center px-4 sm:px-6 lg:px-8 py-6 sm:py-0">
+        
+        {/* Card for mobile only */}
+        <div className="w-full max-w-md bg-white/10 sm:bg-transparent backdrop-blur-md sm:backdrop-blur-none 
+                        rounded-2xl p-6 sm:p-0 shadow-lg sm:shadow-none">
+          
+          <h3 className="text-xl sm:text-2xl font-semibold text-center sm:text-left text-black mb-1">
+            Create An Account
+          </h3>
+          <p className="text-xs sm:text-sm text-slate-700 text-center sm:text-left mb-6 sm:mb-3">
             Start your journey with us by entering your details.
           </p>
 
           <form onSubmit={handleSignUp} className="space-y-4">
-            <ProfilePhotoSelector image={profilePic} setImage={setProfilePic} />
+            <div className="flex justify-center sm:justify-start">
+              <ProfilePhotoSelector image={profilePic} setImage={setProfilePic} />
+            </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Input
@@ -118,7 +126,7 @@ const Signup = () => {
               disabled={loading}
               className={`w-full mt-2 bg-gradient-to-r from-indigo-800 to-violet-500 hover:from-violet-600 hover:to-indigo-600
                 focus:ring-2 focus:ring-violet-500 focus:outline-none
-                text-white py-2 sm:py-2.5 rounded-xl font-medium shadow-md transition duration-300 ease-in-out
+                text-white py-2 rounded-xl font-medium shadow-md transition duration-300 ease-in-out
                 ${loading ? "opacity-70 cursor-not-allowed" : ""}`}
             >
               {loading ? (
