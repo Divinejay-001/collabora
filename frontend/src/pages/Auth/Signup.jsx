@@ -69,8 +69,10 @@ const Signup = () => {
 
   return (
     <AuthLayout>
-      <div className="w-full min-h-screen flex flex-col justify-center px-4 sm:px-6 lg:px-8">
+<div className="w-full min-h-screen flex flex-col justify-center px-4 sm:px-6 lg:px-8 
+                sm:py-0 py-6 overflow-y-auto">
   <div className="max-w-md w-full mx-auto">
+
     <h3 className="text-xl font-semibold text-black">Create An Account</h3>
     <p className="text-xs text-slate-700 mt-[1px] mb-6 sm:mb-3">
       Start your journey with us by entering your details.
@@ -79,7 +81,7 @@ const Signup = () => {
     <form onSubmit={handleSignUp} className="space-y-4">
       <ProfilePhotoSelector image={profilePic} setImage={setProfilePic} />
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+<div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <Input
           value={fullName}
           onChange={({ target }) => setFullName(target.value)}
