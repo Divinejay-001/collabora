@@ -73,8 +73,10 @@ const Signup = () => {
       <div className="w-full min-h-screen flex flex-col justify-center items-center px-4 sm:px-6 lg:px-8 py-6 sm:py-0">
         
         {/* Card for mobile only */}
-        <div className="w-full max-w-md bg-white/10 sm:bg-transparent backdrop-blur-md sm:backdrop-blur-none 
-                        rounded-2xl p-6 sm:p-0 shadow-lg sm:shadow-none">
+        <div className="w-[90%] max-w-lg sm:max-w-md 
+                bg-white/10 sm:bg-transparent backdrop-blur-md sm:backdrop-blur-none 
+                rounded-2xl p-6 sm:p-0 shadow-lg sm:shadow-none">
+
           
           <h3 className="text-xl sm:text-2xl font-semibold text-center sm:text-left text-black mb-1">
             Create An Account
